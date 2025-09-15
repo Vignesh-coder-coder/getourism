@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Explore With Us - Tourist Guide</title>
+
+  <!-- AOS Animation CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    :root { --accent: #ff9800; --brand: #2196f3; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(270deg,#f5f5f5,#e3f2fd,#fff3e0);
+      background-size: 600% 600%;
+      animation: bgAnimation 20s ease infinite;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)),
+                  url('https://picsum.photos/1200/700?travel') no-repeat center center/cover;
+      color: #fff;
+      text-align: center;
+      padding: 110px 20px;
+      background-position: center center;
+      position: relative;
+    }
+    header h1 { font-size: 3.2rem; margin: 0 0 8px; }
+    header p { margin: 0 0 18px; font-size: 1.05rem; }
+    header a.cta {
+      display:inline-block; padding:12px 24px; border-radius:26px;
+      background:var(--accent); color:#fff; text-decoration:none; font-weight:700;
+      transition:transform .18s, background .18s;
+    }
+    header a.cta:hover { transform:translateY(-3px); background:#e07b10; }
+
+    /* Navbar */
+    nav {
+      display:flex; justify-content:space-between; align-items:center;
+      background:#333; position:sticky; top:0; z-index:9999; padding:8px 16px;
+    }
+    .logo {
+      display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; font-size:1.2rem;
+    }
+    .logo img {
+      width:40px; height:40px; border-radius:50%; object-fit:cover;
+    }
+
+    .menu {
+      display:flex; gap:12px;
+    }
+    .menu a {
+      color:#fff; padding:10px; text-decoration:none; display:inline-block;
+    }
+    .menu a:hover { background:#575757; border-radius:6px; }
+
+    /* Dropdown styles */
+    .dropdown { position: relative; }
+    .dropdown-toggle::after { content:" ▾"; font-size:0.8rem; }
+    .dropdown-menu {
+      display:none; position:absolute; top:100%; left:0; background:#444;
+      flex-direction:column; min-width:160px; border-radius:6px;
+    }
+    .dropdown-menu a { padding:10px; color:#fff; display:block; }
+    .dropdown-menu a:hover { background:#555; }
+    .dropdown.open .dropdown-menu { display:flex; }
+
+    /* Hamburger */
+    .hamburger {
+      display:none; flex-direction:column; cursor:pointer; gap:5px;
+    }
+    .hamburger span {
+      width:25px; height:3px; background:#fff; border-radius:2px;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      .menu {
+        display:none; width:100%; flex-direction:column;
+        background:#333; margin-top:10px; border-radius:8px; padding:10px 0;
+      }
+      .menu a { text-align:center; }
+      .menu.show { display:flex; }
+      .hamburger { display:flex; }
+    }
+
+    .container { width:90%; max-width:1100px; margin:40px auto; padding:0 6px; }
+
+    .cards { display:grid; gap:18px; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); }
+    .card {
+      background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.12);
+      transition:transform .25s; cursor:pointer;
+    }
+    .card:hover { transform:translateY(-6px); }
+    .card img { width:100%; height:190px; object-fit:cover; display:block; }
+    .card .body { padding:12px; }
+    .card h3 { margin:6px 0 8px; color:#222; }
+
+    .stats {
+      display:flex; gap:18px; justify-content:space-around; align-items:center;
+      background:#fff; padding:28px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,.08);
+      flex-wrap:wrap;
+    }
+    .stat { text-align:center; min-width:120px; margin:8px 10px; }
+    .stat h2 { font-size:2rem; color:var(--accent); margin:0 0 6px; }
+    .stat p { margin:0; color:#444; }
+
+    .gallery { display:grid; gap:10px; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); }
+    .gallery img { width:100%; border-radius:8px; display:block; cursor:pointer; transition:transform .18s; }
+    .gallery img:hover { transform:scale(1.03); }
+
+    #lightbox {
+      position:fixed; inset:0; background:rgba(0,0,0,.9); display:none; align-items:center; justify-content:center;
+      z-index:2000; padding:20px;
+    }
+    #lightbox img { max-width:95%; max-height:85%; border-radius:8px; box-shadow:0 14px 40px rgba(0,0,0,.6); }
+
+    .contact-form { background:#fff; padding:18px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.08); }
+    .contact-form input, .contact-form textarea {
+      width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #d0d0d0;
+    }
+    .contact-form button { background:var(--brand); color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; }
+
+    footer { background:#333; color:#fff; text-align:center; padding:18px 10px; margin-top:30px; }
+
+    #topBtn {
+      position:fixed; right:18px; bottom:18px; width:44px; height:44px; border-radius:50%; border:none;
+      background:var(--accent); color:#fff; display:none; z-index:1500; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.2);
+    }
+
+    @keyframes bgAnimation {
+      0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+    }
+
+    @media (max-width:520px) {
+      header { padding:80px 14px; background-attachment:scroll; }
+      header h1 { font-size:1.8rem; }
+      .stats { padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <header data-aos="fade-down">
+    <h1>Discover Beautiful Places</h1>
+    <p>Your guide to unforgettable journeys</p>
+    <a class="cta" href="#destinations">Explore Now</a>
+  </header>
+
+  <nav>
+    <div class="logo">
+      <img src="https://picsum.photos/100/100?logo" alt="Logo">
+      <span>ExploreWithUs</span>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="menu" id="menu">
+      <div class="dropdown">
+        <a href="#" class="dropdown-toggle">Home</a>
+        <div class="dropdown-menu">
+          <a href="#about">About Us</a>
+          <a href="#services">Services</a>
+          <a href="#packages">Packages</a>
+        </div>
+      </div>
+      <a href="#destinations">Destinations</a>
+      <a href="#stats">Stats</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="container" id="about">
+      <h2 data-aos="fade-right">About Us</h2>
+      <p data-aos="fade-up">We are passionate travelers bringing you the best experiences from around the world.</p>
+    </section>
+
+    <section class="container" id="destinations">
+      <h2 data-aos="fade-up">Top Destinations</h2>
+      <div class="cards">
+        <article class="card" data-aos="zoom-in" data-aos-delay="100">
+          <img src="https://picsum.photos/400/260?beach" alt="Beach">
+          <div class="body"><h3>Sunny Beaches</h3><p>Relax on golden sands and enjoy crystal-clear waters.</p></div>
+        </article>
+        <article class="card" data-aos="zoom-in" data-aos-delay="200">
+          <img src="https://picsum.photos/400/260?mountain" alt="Mountains">
+          <div class="body"><h3>Mountain Adventures</h3><p>Explore breathtaking trails and stunning landscapes.</p></div>
+        </article>
+        <article class="card" data-aos="zoom-in" data-aos-delay="300">
+          <img src="https://picsum.photos/400/260?city" alt="City">
+          <div class="body"><h3>City Tours</h3><p>Discover culture, food, and nightlife in vibrant cities.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="container" id="stats" data-aos="fade-up">
+      <div class="stats">
+        <div class="stat"><h2 id="travelerCount">0</h2><p>Happy Travelers</p></div>
+        <div class="stat"><h2 id="destCount">0</h2><p>Destinations Covered</p></div>
+        <div class="stat"><h2 id="guideCount">0</h2><p>Expert Guides</p></div>
+      </div>
+    </section>
+
+    <section class="container" id="gallery">
+      <h2 data-aos="fade-up">Travel Gallery</h2>
+      <div class="gallery">
+        <img data-large="https://picsum.photos/1200/900?italy" src="https://picsum.photos/400/300?italy" alt="Italy" data-aos="fade-in">
+        <img data-large="https://picsum.photos/1200/900?forest" src="https://picsum.photos/400/300?forest" alt="Forest" data-aos="fade-in">
+        <img data-large="https://picsum.photos/1200/900?desert" src="https://picsum.photos/400/300?desert" alt="Desert" data-aos="fade-in">
+        <img data-large="https://picsum.photos/1200/900?island" src="https://picsum.photos/400/300?island" alt="Island" data-aos="fade-in">
+      </div>
+    </section>
+
+    <div id="lightbox" aria-hidden="true"><img alt="enlarged view"></div>
+
+    <section class="container" id="contact" data-aos="fade-left">
+      <h2>Contact Us</h2>
+      <div class="contact-form">
+        <input placeholder="Your Name" />
+        <input type="email" placeholder="Your Email" />
+        <textarea rows="5" placeholder="Your Message"></textarea>
+        <button>Send Message</button>
+      </div>
+    </section>
+  </main>
+
+  <footer data-aos="fade-up">
+    <p>&copy; 2025 Explore With Us. All rights reserved.</p>
+  </footer>
+
+  <button id="topBtn" title="Back to top">↑</button>
+
+  <!-- AOS Animation JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.AOS) AOS.init({ duration: 1000, once: true });
+
+      // Dropdown toggle
+      const toggle = document.querySelector(".dropdown-toggle");
+      const dropdown = document.querySelector(".dropdown");
+      toggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        dropdown.classList.toggle("open");
+      });
+      document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target)) dropdown.classList.remove("open");
+      });
+
+      // Hamburger menu toggle
+      const hamburger = document.getElementById("hamburger");
+      const menu = document.getElementById("menu");
+      hamburger.addEventListener("click", () => {
+        menu.classList.toggle("show");
+      });
+
+      // Counters with IntersectionObserver
+      const statsSection = document.querySelector('#stats');
+      let counted = false;
+      function animateCount(el, target, duration = 1400) {
+        let current = 0;
+        const frames = Math.round(duration / 16);
+        const increment = target / frames;
+        function step() {
+          current += increment;
+          if (current >= target) {
+            el.innerText = target;
+          } else {
+            el.innerText = Math.round(current);
+            requestAnimationFrame(step);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      if (statsSection) {
+        const obs = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && !counted) {
+            counted = true;
+            animateCount(document.getElementById('travelerCount'), 1200);
+            animateCount(document.getElementById('destCount'), 85);
+            animateCount(document.getElementById('guideCount'), 40);
+            obs.disconnect();
+          }
+        }, { threshold: 0.5 });
+        obs.observe(statsSection);
+      }
+
+      // Lightbox
+      const galleryImgs = document.querySelectorAll('.gallery img');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = lightbox.querySelector('img');
+      galleryImgs.forEach(img => {
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.dataset.large || img.src;
+          lightbox.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      lightbox.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = '';
+      });
+
+      // Back to top button
+      const topBtn = document.getElementById('topBtn');
+      window.addEventListener('scroll', () => {
+        topBtn.style.display = window.scrollY > 220 ? 'block' : 'none';
+      });
+      topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    });
+  </script>
+</body>
+</html>
