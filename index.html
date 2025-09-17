@@ -355,8 +355,11 @@
                             <p class="success-subtitle">We'll get back to you within 24 hours.</p>
                         </div>
 
-                        <form id="contact-form" class="contact-form" name="contact" data-netlify="true" method="POST">
+                        <form id="contact-form" class="contact-form" name="contact" method="POST">
 							<input type="hidden" name="form-name" value="contact">
+							<p style="display:none">
+							    <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
+							  </p>
                             <div class="form-group">
                                 <label for="name">Full Name</label>
                                 <input type="text" id="name" name="name" required placeholder="Enter your full name">
@@ -442,5 +445,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
