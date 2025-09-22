@@ -713,3 +713,13 @@ body {
 	width: 55px;
 	height: 45px;
 }
+
+.card-location .map-link {
+    color: #fff;              /* White text */
+    text-decoration: none;    /* Remove underline */
+    font-weight: 500;         /* Slightly bold */
+}
+
+.card-location .map-link:hover {
+    text-decoration: underline;  /* Show underline on hover */
+}
