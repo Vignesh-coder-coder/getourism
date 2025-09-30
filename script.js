@@ -36,29 +36,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const successMessage = document.getElementById("success-message")
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    // Get form data
-    const formData = new FormData(form)
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      message: formData.get("message"),
-    }
+    const formData = new FormData(form);
 
-    console.log("Form submitted:", data)
+    // Send form data to Netlify
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(formData).toString(),
+    })
+      .then(() => {
+        // Show success message
+        form.classList.add("hidden");
+        successMessage.classList.remove("hidden");
 
-    // Show success message
-    form.classList.add("hidden")
-    successMessage.classList.remove("hidden")
-
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      form.classList.remove("hidden")
-      successMessage.classList.add("hidden")
-      form.reset()
-    }, 3000)
-  })
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          form.classList.remove("hidden");
+          successMessage.classList.add("hidden");
+          form.reset();
+        }, 3000);
+      })
+      .catch((error) => {
+        alert("❌ Form submission failed: " + error);
+      });
+  });
 
   // Intersection Observer for fade-in animations
   const observer = new IntersectionObserver(
